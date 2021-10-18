@@ -1,0 +1,143 @@
+"use-strict";
+
+console.log("Welcom to My music Player");
+
+//Intialize the variables
+let songIndex = 0;
+let audioElement = new Audio('Songs/blue.mp3');
+let masterPlay = document.getElementById('masterPlay')
+let myProgressBar = document.getElementById('myProgressBar');
+let masterSongName = document.getElementById('masterSongName');
+let masterAuthorName =  document.getElementById('masterAuthorName');
+let gif = document.getElementById('gif');
+let songs = [
+
+    {songName:"Bum Bum Tam Tam", filePath:"songs/Bum-Bum-Tam-Tam.mp3",authorName:"J Balvin - Bum Bum Tam Tam"},
+    {songName:"Mann Bharrya Shershaah", filePath:"songs/Mann Bharryaa.mp3",authorName:"B Praak - Mann Bharrya"},
+    {songName:"Ranjha Shershaah", filePath:"songs/Ranjha.mp3",authorName:"B Praak- Ranjha from 'Shershaah' "},
+    {songName:"Industry Baby", filePath:"songs/industry-baby.mp3",authorName:"Lil Nas X - Industry Baby"},
+    {songName:"Rataan-Lambiyan", filePath:"songs/Raataan-Lambiyan.mp3",authorName:"Assees Kaur - Rataan Lambiyan"},
+    {songName:"Rammo Rammo", filePath:"songs/Rammo Rammo.mp3",authorName:"Udit Narayan"},
+    {songName:"Blue Ain't Your Color", filePath:"songs/blue.mp3",authorName:"Home Free"},
+    {songName:"Bum Bum Tam Tam", filePath:"songs/Bum-Bum-Tam-Tam.mp3",authorName:"J Balvin - Bum Bum Tam Tam"},
+    {songName:"Mann Bharrya Shershaah", filePath:"songs/Mann Bharryaa.mp3",authorName:"B Praak - Mann Bharrya"},
+    {songName:"Ranjha Shershaah", filePath:"songs/Ranjha.mp3",authorName:"B Praak- Ranjha from 'Shershaah' "},
+
+];
+
+// audioElement.play();
+//Handle play/pause click
+masterPlay.addEventListener('click',()=>{
+    if(audioElement.paused || audioElement.currentTime<=0){
+        audioElement.play();
+        masterPlay.classList.remove('fa-play');
+        masterPlay.classList.add('fa-pause');
+        gif.style.opacity = 1;
+
+    }
+    else{
+        audioElement.pause();
+        masterPlay.classList.remove('fa-pause');
+        masterPlay.classList.add('fa-play');
+        gif.style.opacity = 0;
+
+    }
+})
+//Listen to Events
+audioElement.addEventListener('timeupdate',()=>{
+    //Update Seekbar
+    progress = parseFloat((audioElement.currentTime/audioElement.duration)*100);
+    myProgressBar.value = progress;
+});
+
+myProgressBar.addEventListener('change',()=>{
+  audioElement.currentTime = parseFloat((myProgressBar.value * audioElement.duration)/100);
+});
+const makeAllPlays = ()=>{
+    Array.from(document.getElementsByClassName('songItemPlay')).forEach((element)=>{
+         element.classList.remove('fa-pause');
+        element.classList.add('fa-play');
+        var g = element.parentElement;
+        g.classList.remove('play-icon2');
+        g.classList.add('play-icon');
+    });
+};
+Array.from(document.getElementsByClassName('songItemPlay')).forEach((element)=>{
+  element.addEventListener('click',(e)=>{
+      makeAllPlays();
+      e.target.classList.remove('fa-play');
+      e.target.classList.add('fa-pause');
+      var p = e.target.parentElement;
+      p.classList.remove('play-icon');
+      p.classList.add('play-icon2');
+
+      masterPlay.classList.remove('fa-play');
+      masterPlay.classList.add('fa-pause');
+    
+     songIndex =e.target.id;
+     masterSongName.innerHTML = songs[songIndex].songName;
+     masterAuthorName.innerHTML = songs[songIndex].authorName;
+     audioElement.src = songs[songIndex].filePath;
+
+      audioElement.currentTime = 0;
+      audioElement.play();
+
+      gif.style.opacity = 1;
+  })
+});
+
+document.getElementById('backward').addEventListener('click',()=>{
+        if(songIndex<=0){
+            songIndex = 0;
+        }
+        else{
+            songIndex-=1;
+        }
+        makeAllPlays();
+        var g = document.getElementById(songIndex);
+        g.classList.remove('fa-play');
+        g.classList.add('fa-pause');
+        var p = g.parentElement;
+        p.classList.remove('play-icon');
+        p.classList.add('play-icon2');
+        masterSongName.innerHTML = songs[songIndex].songName;
+        masterAuthorName.innerHTML = songs[songIndex].authorName;
+
+        audioElement.src = songs[songIndex].filePath;
+   
+         audioElement.currentTime = 0;
+         audioElement.play();
+   
+         masterPlay.classList.remove('fa-play');
+         masterPlay.classList.add('fa-pause');
+         gif.style.opacity = 1;
+
+});
+
+document.getElementById('forward').addEventListener('click',()=>{
+    if(songIndex>=9){
+        songIndex = 0;
+    }
+    else{
+        songIndex+=1;
+    }
+    makeAllPlays();
+    var g = document.getElementById(songIndex);
+    g.classList.remove('fa-play');
+    g.classList.add('fa-pause');
+    var p = g.parentElement;
+    p.classList.remove('play-icon');
+    p.classList.add('play-icon2');
+    masterSongName.innerHTML = songs[songIndex].songName;
+    masterAuthorName.innerHTML = songs[songIndex].authorName;
+
+    audioElement.src = songs[songIndex].filePath;
+
+     audioElement.currentTime = 0;
+     audioElement.play();
+
+     masterPlay.classList.remove('fa-play');
+     masterPlay.classList.add('fa-pause');
+     gif.style.opacity = 1;
+
+});
